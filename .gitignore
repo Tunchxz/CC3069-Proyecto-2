@@ -1,0 +1,16 @@
+/build/
+/tmp/
+__pycache__/
+*.pyc
+
+AGENTS.md
+CLAUDE.md
+cc3069-proyecto-02.md
+Lab6_Chet.docx
+generar_informe.py
+paginas_indice.py
+toc_headings.json
+
+generar_figuras.py
+
+Informe_Proyecto2.docx
