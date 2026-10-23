@@ -1,0 +1,14 @@
+$ mpirun --oversubscribe -np 4 build/search_mpi -s hybrid -c 4096 -t 1 -i build/bench_inputs/18014398509481984.aes -b 56
+Estado: encontrada
+Clave encontrada: 18014398509481984
+Mensaje: Esta es una prueba de proyecto 2
+Ejecucion: MPI
+Procesos: 4
+Hilos por proceso: 1
+Estrategia: hybrid
+Bits: 56
+Tamano de chunk: 4096
+Candidatas probadas: 12289
+Tiempo: 0.000572196 segundos
+
+exit_code=0

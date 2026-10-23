@@ -1,0 +1,7 @@
+$ build/aes_tool encrypt -i build/bench_inputs/original.txt -o build/bench_inputs/262144.aes -k 262144
+Operacion: encrypt
+Entrada: build/bench_inputs/original.txt (32 bytes)
+Salida: build/bench_inputs/262144.aes (64 bytes)
+Clave numerica: 262144
+
+exit_code=0

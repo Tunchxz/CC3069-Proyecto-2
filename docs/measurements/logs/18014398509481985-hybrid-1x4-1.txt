@@ -1,0 +1,12 @@
+$ mpirun --oversubscribe -np 1 build/search_mpi -s hybrid -c 4096 -t 4 -i build/bench_inputs/18014398509481985.aes -b 56 --seconds 3
+Estado: limite_tiempo
+Ejecucion: MPI
+Procesos: 1
+Hilos por proceso: 4
+Estrategia: hybrid
+Bits: 56
+Tamano de chunk: 4096
+Candidatas probadas: 82796544
+Tiempo: 3.000113852 segundos
+
+exit_code=3

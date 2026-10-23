@@ -1,0 +1,11 @@
+$ build/search_seq -i build/bench_inputs/fuera-de-rango.aes -b 56 --seconds 3
+Estado: limite_tiempo
+Ejecucion: secuencial
+Procesos: 1
+Hilos por proceso: 1
+Estrategia: ascending
+Bits: 56
+Tamano de chunk: 4096
+Candidatas probadas: 21999616
+Tiempo: 3.000537924 segundos
+exit_code=3

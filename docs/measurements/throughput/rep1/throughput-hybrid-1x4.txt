@@ -1,0 +1,11 @@
+$ mpirun --oversubscribe -np 1 build/search_mpi -i build/bench_inputs/fuera-de-rango.aes -b 56 -s hybrid -t 4 --seconds 3
+Estado: limite_tiempo
+Ejecucion: MPI
+Procesos: 1
+Hilos por proceso: 4
+Estrategia: hybrid
+Bits: 56
+Tamano de chunk: 4096
+Candidatas probadas: 83202048
+Tiempo: 3.000048897 segundos
+exit_code=3

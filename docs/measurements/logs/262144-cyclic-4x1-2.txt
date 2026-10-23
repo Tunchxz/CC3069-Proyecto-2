@@ -1,0 +1,14 @@
+$ mpirun --oversubscribe -np 4 build/search_mpi -s cyclic -c 4096 -t 1 -i build/bench_inputs/262144.aes -b 20
+Estado: encontrada
+Clave encontrada: 262144
+Mensaje: Esta es una prueba de proyecto 2
+Ejecucion: MPI
+Procesos: 4
+Hilos por proceso: 1
+Estrategia: cyclic
+Bits: 20
+Tamano de chunk: 4096
+Candidatas probadas: 274433
+Tiempo: 0.011584695 segundos
+
+exit_code=0
