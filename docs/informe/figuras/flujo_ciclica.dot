@@ -1,0 +1,23 @@
+digraph ciclica {
+    graph [rankdir=TB, fontname="Arial", nodesep=0.35, ranksep=0.32, dpi=200, bgcolor="white"];
+    node [shape=box, style="rounded,filled", fillcolor="#EAF2E6", color="#3A7C22", penwidth=1.4,
+          fontname="Arial", fontsize=11, fontcolor="#1F1F1F", margin="0.18,0.08"];
+    edge [color="#4D4D4D", penwidth=1.2, arrowsize=0.7, fontname="Arial", fontsize=10, fontcolor="#333333"];
+
+    inicio  [label="Inicio: MPI_Init en P procesos", shape=box, style="rounded,filled", fillcolor="#3A7C22", fontcolor="white"];
+    leer    [label="Rank 0 lee el archivo cifrado\n(IV + texto cifrado)"];
+    bcast   [label="MPI_Bcast: todos reciben\nel mismo cifrado"];
+    ronda   [label="Ronda r: el rank k toma el bloque r·P + k\n(4096 candidatas consecutivas)"];
+    probar  [label="Para cada candidata: construir clave de 16 bytes,\ndescifrar AES-128-CBC y buscar la frase"];
+    allred  [label="MPI_Allreduce(MIN):\n¿clave encontrada? ¿límite de tiempo?"];
+    hay     [label="¿Alguien la\nencontró?", shape=diamond, style="filled", fillcolor="#FFFFFF", margin="0.05,0.02"];
+    queda   [label="¿Quedan bloques\ny tiempo?", shape=diamond, style="filled", fillcolor="#FFFFFF", margin="0.05,0.02"];
+    fin_ok  [label="Todos paran; rank 0 imprime\nclave, mensaje y tiempo"];
+    fin_no  [label="Informar rango agotado\no límite de tiempo"];
+
+    inicio -> leer -> bcast -> ronda -> probar -> allred -> hay;
+    hay -> fin_ok [label="  Sí"];
+    hay -> queda [label="  No"];
+    queda -> ronda [label="  Sí: r = r + 1", constraint=false];
+    queda -> fin_no [label="  No"];
+}

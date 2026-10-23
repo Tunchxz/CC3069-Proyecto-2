@@ -1,0 +1,30 @@
+digraph hibrida {
+    graph [rankdir=TB, fontname="Arial", nodesep=0.35, ranksep=0.30, dpi=200, bgcolor="white"];
+    node [shape=box, style="rounded,filled", fillcolor="#EAF2E6", color="#3A7C22", penwidth=1.4,
+          fontname="Arial", fontsize=11, fontcolor="#1F1F1F", margin="0.18,0.08"];
+    edge [color="#4D4D4D", penwidth=1.2, arrowsize=0.7, fontname="Arial", fontsize=10, fontcolor="#333333"];
+
+    inicio  [label="Inicio: MPI_Init_thread(FUNNELED) en P procesos", fillcolor="#3A7C22", fontcolor="white"];
+    leer    [label="Rank 0 lee el archivo cifrado; MPI_Bcast a todos"];
+    hilos   [label="Cada proceso crea T hilos OpenMP;\ncada hilo reserva su contexto AES y su buffer"];
+    tramo   [label="Cada rank calcula su tramo contiguo:\n[k·N/P, (k+1)·N/P)  (cociente y residuo)"];
+    bloque  [label="Siguiente bloque de 4096 candidatas del tramo"];
+    omp     [label="#pragma omp parallel for schedule(dynamic, 64):\nlos hilos se reparten el bloque", fillcolor="#FFFFFF"];
+    acierto [label="¿Un hilo\nacertó?", shape=diamond, style="filled", fillcolor="#FFFFFF", margin="0.05,0.02"];
+    bandera [label="Bandera atómica: los demás hilos\nsaltan las candidatas restantes"];
+    allred  [label="Hilo principal: MPI_Allreduce(MIN)\n¿clave encontrada? ¿límite de tiempo?"];
+    hay     [label="¿Algún proceso\nla encontró?", shape=diamond, style="filled", fillcolor="#FFFFFF", margin="0.05,0.02"];
+    queda   [label="¿Queda tramo\ny tiempo?", shape=diamond, style="filled", fillcolor="#FFFFFF", margin="0.05,0.02"];
+    fin_ok  [label="Todos paran; rank 0 imprime\nclave, mensaje y tiempo"];
+    fin_no  [label="Informar rango agotado\no límite de tiempo"];
+
+    inicio -> leer -> hilos -> tramo -> bloque -> omp -> acierto;
+    acierto -> bandera [label="  Sí"];
+    acierto -> allred [label="  No"];
+    bandera -> allred;
+    allred -> hay;
+    hay -> fin_ok [label="  Sí"];
+    hay -> queda [label="  No"];
+    queda -> bloque [label="  Sí", constraint=false];
+    queda -> fin_no [label="  No"];
+}
