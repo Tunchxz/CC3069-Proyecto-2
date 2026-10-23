@@ -1,0 +1,60 @@
+
+$ make -B build
+gcc -D_POSIX_C_SOURCE=200809L -std=c11 -O2 -Wall -Wextra -Wpedantic src/aes_tool.c src/common.c -o build/aes_tool -lcrypto
+gcc -D_POSIX_C_SOURCE=200809L -std=c11 -O2 -Wall -Wextra -Wpedantic src/search_seq.c src/common.c src/search_support.c -o build/search_seq -lcrypto
+mpicc -D_POSIX_C_SOURCE=200809L -std=c11 -O2 -Wall -Wextra -Wpedantic -fopenmp src/search_mpi.c src/common.c src/search_support.c -o build/search_mpi -lcrypto
+
+$ cat examples/mensaje.txt
+Esta es una prueba de proyecto 2
+
+$ build/aes_tool encrypt -i examples/mensaje.txt -o build/mensaje.aes -k 123456
+Operacion: encrypt
+Entrada: examples/mensaje.txt (32 bytes)
+Salida: build/mensaje.aes (64 bytes)
+Clave numerica: 123456
+
+$ od -An -tx1 build/mensaje.aes
+ a4 c8 51 86 ee 32 c5 5a cd 87 51 f6 0f 34 b2 27
+ 35 91 28 63 92 98 af b8 67 bd 3f c4 53 a3 39 46
+ 78 d0 a0 30 18 3c 91 a1 2a 5a e4 01 33 81 46 96
+ 25 ab 8a b7 45 43 bc 7d 77 4a 99 f3 ab bb 08 f0
+
+$ build/aes_tool decrypt -i build/mensaje.aes -o build/recuperado.txt -k 123456
+Operacion: decrypt
+Entrada: build/mensaje.aes (64 bytes)
+Salida: build/recuperado.txt (32 bytes)
+Clave numerica: 123456
+
+$ cat build/recuperado.txt
+Esta es una prueba de proyecto 2
+
+$ cmp examples/mensaje.txt build/recuperado.txt
+OK: archivos original y recuperado identicos.
+
+$ build/search_seq -i build/mensaje.aes -b 56
+Estado: encontrada
+Clave encontrada: 123456
+Mensaje: Esta es una prueba de proyecto 2
+Ejecucion: secuencial
+Procesos: 1
+Hilos por proceso: 1
+Estrategia: ascending
+Bits: 56
+Tamano de chunk: 4096
+Candidatas probadas: 123457
+Tiempo: 0.017772492 segundos
+
+$ mpirun --oversubscribe -np 4 build/search_mpi -i build/mensaje.aes -b 56 -s cyclic
+Estado: encontrada
+Clave encontrada: 123456
+Mensaje: Esta es una prueba de proyecto 2
+Ejecucion: MPI
+Procesos: 4
+Hilos por proceso: 1
+Estrategia: cyclic
+Bits: 56
+Tamano de chunk: 4096
+Candidatas probadas: 127553
+Tiempo: 0.004910162 segundos
+
+Demostracion completada; registro: docs/measurements/demo.txt
